@@ -1,6 +1,6 @@
 <html>
 <head>
-  <meta charset=utf-8 />
+ ** <meta charset=utf-8 />
   <title>Relay Control</title>
   <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="style.css">
@@ -13,7 +13,7 @@
 <div class='container'>
  <h1>Relay Control - On/Off for Boiler</h1>
  <div class='row'>
-   <div class="col-md-1">Relay</div>
+   <div class="col-md-1"></div>
    <div class="col-md-2">
      <button id='on' class='btn btn-block btn-success'>On</button>
    </div>

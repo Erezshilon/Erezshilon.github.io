@@ -18,7 +18,7 @@
      <button id='on' class='btn btn-block btn-success'>On</button>
    </div>
   <div class="col-md-2">
-    <button id='off' class='btn btn-block btn-danger'>On</button>
+    <button id='off' class='btn btn-block btn-danger'>Off</button>
   </div>
  </div>
 </div>

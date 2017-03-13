@@ -1,7 +1,6 @@
 <html>
 <head>
- ** <meta charset=utf-8 />**
-  <title>Relay Control</title>
+
   <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="style.css">
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>

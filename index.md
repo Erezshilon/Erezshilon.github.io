@@ -10,10 +10,8 @@
   <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
 <div class='container'>
- <h1>Relay Control</h1>
+ <h1>Relay Control - On/Off for Boiler</h1>
  <div class='row'>
    <div class="col-md-1">Relay</div>
    <div class="col-md-2">

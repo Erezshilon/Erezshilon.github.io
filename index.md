@@ -1,3 +1,7 @@
+
+
+
+<html>
 .onoffswitch {
     position: relative; width: 100px;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
@@ -43,10 +47,6 @@
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
 }
-
-
-<html>
-
 <body>
 <div class='container'>
  <h1>Relay Control - On/Off for Boiler</h1>

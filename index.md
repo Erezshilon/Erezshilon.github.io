@@ -7,21 +7,7 @@
   <script type="text/javascript" src="https://cdn.rawgit.com/Foliotek/AjaxQ/master/ajaxq.js"></script>
   <script type="text/javascript" src="https://cdn.rawgit.com/marcoschwartz/aREST.js/master/aREST.js"></script>
   <script type="text/javascript" src="script.js"></script>
-</head>
-<body>
-<div class='container'>
- <h1>Relay Control - On/Off for Boiler</h1>
- <div class='row'>
-   <div class="col-md-1"></div>
-   <div class="col-md-2">
-     <button id='on' class='btn btn-block btn-success'>On</button>
-   </div>
-  <div class="col-md-2">
-    <button id='off' class='btn btn-block btn-danger'>Off</button>
-  </div>
- </div>
-</div>
-
+  
 onoffswitch {
     position: relative; width: 100px;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
@@ -67,6 +53,21 @@ onoffswitch {
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
 }
+
+</head>
+<body>
+<div class='container'>
+ <h1>Relay Control - On/Off for Boiler</h1>
+ <div class='row'>
+   <div class="col-md-1"></div>
+   <div class="col-md-2">
+     <button id='on' class='btn btn-block btn-success'>On</button>
+   </div>
+  <div class="col-md-2">
+    <button id='off' class='btn btn-block btn-danger'>Off</button>
+  </div>
+ </div>
+</div>
 
 <div class="onoffswitch">
     <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">

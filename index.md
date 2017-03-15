@@ -46,10 +46,7 @@
 
 
 <html>
-<head>
 
-  
-</head>
 <body>
 <div class='container'>
  <h1>Relay Control - On/Off for Boiler</h1>

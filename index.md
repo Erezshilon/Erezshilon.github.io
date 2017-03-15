@@ -1,14 +1,4 @@
-<html>
-<head>
-
-  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-  <script type="text/javascript" src="https://cdn.rawgit.com/Foliotek/AjaxQ/master/ajaxq.js"></script>
-  <script type="text/javascript" src="https://cdn.rawgit.com/marcoschwartz/aREST.js/master/aREST.js"></script>
-  <script type="text/javascript" src="script.js"></script>
-  
-onoffswitch {
+.onoffswitch {
     position: relative; width: 100px;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
 }
@@ -54,6 +44,17 @@ onoffswitch {
     right: 0px; 
 }
 
+
+<html>
+<head>
+
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript" src="https://cdn.rawgit.com/Foliotek/AjaxQ/master/ajaxq.js"></script>
+  <script type="text/javascript" src="https://cdn.rawgit.com/marcoschwartz/aREST.js/master/aREST.js"></script>
+  <script type="text/javascript" src="script.js"></script>
+  
 </head>
 <body>
 <div class='container'>

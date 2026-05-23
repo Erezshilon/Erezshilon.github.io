@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "Reel Generator",
+    "slug": "reel-generator",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.erezshilon.reelgenerator",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "גישה לגלריה לבחירת תמונות וסרטונים לריל",
+        "NSPhotoLibraryAddUsageDescription": "שמירת הריל המוכן לגלריה שלך",
+        "NSMicrophoneUsageDescription": "גישה למיקרופון להקלטת וידאו"
+      }
+    },
+    "android": {
+      "package": "com.erezshilon.reelgenerator",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#000000"
+      },
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO"
+      ]
+    },
+    "plugins": [
+      "react-native-reanimated/plugin",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "האפליקציה צריכה גישה לגלריה שלך ליצירת ריל",
+          "cameraPermission": "האפליקציה צריכה גישה למצלמה להקלטת וידאו"
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "גישה לגלריה ליצירת ריל",
+          "savePhotosPermission": "שמירת הריל המוכן לגלריה"
+        }
+      ]
+    ]
+  }
+}

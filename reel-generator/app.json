@@ -4,29 +4,19 @@
     "slug": "reel-generator",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#000000"
-    },
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.erezshilon.reelgenerator",
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "גישה לגלריה לבחירת תמונות וסרטונים לריל",
-        "NSPhotoLibraryAddUsageDescription": "שמירת הריל המוכן לגלריה שלך",
-        "NSMicrophoneUsageDescription": "גישה למיקרופון להקלטת וידאו"
+        "NSPhotoLibraryUsageDescription": "Access your gallery to select photos and videos for the reel",
+        "NSPhotoLibraryAddUsageDescription": "Save your finished reel to your gallery",
+        "NSMicrophoneUsageDescription": "Microphone access for video recording"
       }
     },
     "android": {
       "package": "com.erezshilon.reelgenerator",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#000000"
-      },
       "permissions": [
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
@@ -39,15 +29,15 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "האפליקציה צריכה גישה לגלריה שלך ליצירת ריל",
-          "cameraPermission": "האפליקציה צריכה גישה למצלמה להקלטת וידאו"
+          "photosPermission": "The app needs access to your gallery to create a reel",
+          "cameraPermission": "The app needs camera access to record video"
         }
       ],
       [
         "expo-media-library",
         {
-          "photosPermission": "גישה לגלריה ליצירת ריל",
-          "savePhotosPermission": "שמירת הריל המוכן לגלריה"
+          "photosPermission": "Access your gallery to create a reel",
+          "savePhotosPermission": "Save your finished reel to your gallery"
         }
       ]
     ]

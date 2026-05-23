@@ -104,6 +104,25 @@ async function concatenateClips(
   return ReturnCode.isSuccess(returnCode);
 }
 
+// Extract first frame of a video as a JPEG thumbnail
+export async function extractVideoThumbnail(
+  videoUri: string,
+  index: number
+): Promise<string | undefined> {
+  await FileSystem.makeDirectoryAsync(CACHE_DIR, { intermediates: true }).catch(() => {});
+  const outputPath = `${CACHE_DIR}thumb_${index}_${Date.now()}.jpg`;
+  const cmd = [
+    `-i "${videoUri}"`,
+    `-vf "scale=300:300:force_original_aspect_ratio=increase,crop=300:300"`,
+    `-vframes 1`,
+    `-y "${outputPath}"`,
+  ].join(' ');
+
+  const session = await FFmpegKit.execute(cmd);
+  const returnCode = await session.getReturnCode();
+  return ReturnCode.isSuccess(returnCode) ? outputPath : undefined;
+}
+
 export interface ProcessingProgress {
   step: string;
   current: number;

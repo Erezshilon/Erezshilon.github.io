@@ -10,8 +10,8 @@ import {
   StatusBar,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { getVideoThumbnailAsync } from 'expo-video-thumbnails';
 import { Ionicons } from '@expo/vector-icons';
+import { extractVideoThumbnail } from '../utils/ffmpegCommands';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -49,12 +49,7 @@ export default function HomeScreen() {
         let thumbnailUri: string | undefined;
 
         if (asset.type === 'video' && asset.uri) {
-          try {
-            const thumb = await getVideoThumbnailAsync(asset.uri, { time: 0 });
-            thumbnailUri = thumb.uri;
-          } catch {
-            thumbnailUri = undefined;
-          }
+          thumbnailUri = await extractVideoThumbnail(asset.uri, Date.now());
         }
 
         return {

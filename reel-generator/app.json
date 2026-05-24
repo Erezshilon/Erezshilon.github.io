@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "Reel Generator",
+    "slug": "reel-generator",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": false,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.erezshilon.reelgenerator",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Access your gallery to select photos and videos for the reel",
+        "NSPhotoLibraryAddUsageDescription": "Save your finished reel to your gallery",
+        "NSMicrophoneUsageDescription": "Microphone access for video recording"
+      }
+    },
+    "android": {
+      "package": "com.erezshilon.reelgenerator",
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app needs access to your gallery to create a reel",
+          "cameraPermission": "The app needs camera access to record video"
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Access your gallery to create a reel",
+          "savePhotosPermission": "Save your finished reel to your gallery"
+        }
+      ]
+    ]
+  }
+}

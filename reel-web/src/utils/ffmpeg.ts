@@ -1,5 +1,8 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg'
 import { fetchFile, toBlobURL } from '@ffmpeg/util'
+import { MediaFile, Progress, Style } from '../types'
+import { buildPhotoVF, buildVideoVF, buildCollageFilter, resetKenBurns } from './effects'
+import { findHighlightStart } from './audioAnalysis'
 
 const ffmpeg = new FFmpeg()
 let loaded = false
@@ -16,70 +19,128 @@ export async function loadFFmpeg(onLog?: (msg: string) => void) {
   loaded = true
 }
 
-export interface MediaFile {
-  id: string
-  file: File
-  type: 'image' | 'video'
-  previewUrl: string
-  duration?: number // seconds (videos only)
-}
+const PHOTO_DURATION = 3   // seconds each photo is shown
+const VIDEO_MAX_CLIP = 5   // max seconds per video clip
 
-export interface Progress {
-  step: string
-  percent: number
-}
-
-const REEL_W = 1080
-const REEL_H = 1920
-const SCALE_FILTER = `scale=${REEL_W}:${REEL_H}:force_original_aspect_ratio=decrease,pad=${REEL_W}:${REEL_H}:(ow-iw)/2:(oh-ih)/2:black,setsar=1`
+// ---------------------------------------------------------------------------
+// Main entry point
+// ---------------------------------------------------------------------------
 
 export async function generateReel(
   items: MediaFile[],
+  style: Style,
+  collageMode: boolean,
   onProgress: (p: Progress) => void
 ): Promise<string> {
-  const total = items.length
-  const clips: string[] = []
+  resetKenBurns()
 
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i]
-    const inputName = `input_${i}${item.type === 'image' ? '.jpg' : '.mp4'}`
-    const outputName = `clip_${i}.mp4`
+  const groups = groupItems(items, collageMode)
+  const clipNames: string[] = []
 
-    onProgress({ step: `Processing ${i + 1} of ${total}…`, percent: Math.round((i / (total + 1)) * 100) })
+  for (let i = 0; i < groups.length; i++) {
+    const group = groups[i]
+    const out = `clip_${i}.mp4`
 
-    await ffmpeg.writeFile(inputName, await fetchFile(item.file))
+    onProgress({
+      step: `Processing clip ${i + 1} of ${groups.length}…`,
+      percent: Math.round((i / (groups.length + 1)) * 100),
+    })
 
-    if (item.type === 'image') {
-      await ffmpeg.exec([
-        '-loop', '1', '-i', inputName,
-        '-vf', SCALE_FILTER,
-        '-c:v', 'libx264', '-t', '3', '-pix_fmt', 'yuv420p', '-r', '30',
-        '-y', outputName,
-      ])
+    if (group.length === 2) {
+      await processCollage(group, out, style)
     } else {
-      const duration = String(Math.min(item.duration ?? 5, 5))
-      await ffmpeg.exec([
-        '-i', inputName,
-        '-vf', SCALE_FILTER,
-        '-c:v', 'libx264', '-t', duration, '-pix_fmt', 'yuv420p', '-r', '30', '-an',
-        '-y', outputName,
-      ])
+      const item = group[0]
+      if (item.type === 'image') await processPhoto(item, out, style)
+      else await processVideo(item, out, style)
     }
 
-    clips.push(outputName)
+    clipNames.push(out)
   }
 
-  onProgress({ step: 'Stitching clips together…', percent: Math.round((total / (total + 1)) * 100) })
+  onProgress({ step: 'Stitching clips together…', percent: 95 })
 
-  // Write concat list
-  const list = clips.map(c => `file '${c}'`).join('\n')
+  const list = clipNames.map(n => `file '${n}'`).join('\n')
   await ffmpeg.writeFile('list.txt', list)
-
   await ffmpeg.exec([
     '-f', 'concat', '-safe', '0', '-i', 'list.txt',
     '-c', 'copy', '-y', 'reel.mp4',
   ])
 
   const data = await ffmpeg.readFile('reel.mp4') as Uint8Array
-  return URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }))
+  return URL.createObjectURL(new Blob([data.buffer as ArrayBuffer], { type: 'video/mp4' }))
+}
+
+// ---------------------------------------------------------------------------
+// Grouping
+// ---------------------------------------------------------------------------
+
+function groupItems(items: MediaFile[], collageMode: boolean): MediaFile[][] {
+  const groups: MediaFile[][] = []
+  let i = 0
+  while (i < items.length) {
+    const item = items[i]
+    if (
+      collageMode &&
+      item.type === 'image' &&
+      i + 1 < items.length &&
+      items[i + 1].type === 'image'
+    ) {
+      groups.push([item, items[i + 1]])
+      i += 2
+    } else {
+      groups.push([item])
+      i++
+    }
+  }
+  return groups
+}
+
+// ---------------------------------------------------------------------------
+// Processors
+// ---------------------------------------------------------------------------
+
+async function processPhoto(item: MediaFile, out: string, style: Style) {
+  const name = `in_${out}.jpg`
+  await ffmpeg.writeFile(name, await fetchFile(item.file))
+
+  await ffmpeg.exec([
+    '-loop', '1', '-i', name,
+    '-vf', buildPhotoVF(style, PHOTO_DURATION),
+    '-c:v', 'libx264', '-crf', '20', '-preset', 'fast',
+    '-t', String(PHOTO_DURATION), '-pix_fmt', 'yuv420p', '-r', '30',
+    '-y', out,
+  ])
+}
+
+async function processVideo(item: MediaFile, out: string, style: Style) {
+  const name = `in_${out}.mp4`
+  await ffmpeg.writeFile(name, await fetchFile(item.file))
+
+  const clipDur = Math.min(item.duration ?? VIDEO_MAX_CLIP, VIDEO_MAX_CLIP)
+  const startT  = await findHighlightStart(item.file, clipDur)
+
+  await ffmpeg.exec([
+    '-ss', String(startT), '-i', name,
+    '-vf', buildVideoVF(style, clipDur),
+    '-c:v', 'libx264', '-crf', '20', '-preset', 'fast',
+    '-t', String(clipDur), '-pix_fmt', 'yuv420p', '-r', '30', '-an',
+    '-y', out,
+  ])
+}
+
+async function processCollage(items: MediaFile[], out: string, style: Style) {
+  await ffmpeg.writeFile(`col0_${out}.jpg`, await fetchFile(items[0].file))
+  await ffmpeg.writeFile(`col1_${out}.jpg`, await fetchFile(items[1].file))
+
+  const [filterComplex, mapLabel] = buildCollageFilter(style, PHOTO_DURATION)
+
+  await ffmpeg.exec([
+    '-loop', '1', '-i', `col0_${out}.jpg`,
+    '-loop', '1', '-i', `col1_${out}.jpg`,
+    '-filter_complex', filterComplex,
+    '-map', mapLabel,
+    '-c:v', 'libx264', '-crf', '20', '-preset', 'fast',
+    '-t', String(PHOTO_DURATION), '-pix_fmt', 'yuv420p', '-r', '30',
+    '-y', out,
+  ])
 }
